@@ -1,0 +1,25 @@
+@PACKAGE_INIT@
+
+# 将组件名映射到对应的独立包名
+# 例如: Logger -> DaneJoeLogger
+set(_DANEJOE_COMPONENT_MAP
+  "Logger;DaneJoeLogger"
+  "Commons;DaneJoeCommon"
+  "Database;DaneJoeDatabase"
+)
+
+foreach(comp IN LISTS DaneJoe_FIND_COMPONENTS)
+  set(_found OFF)
+  foreach(pair IN LISTS _DANEJOE_COMPONENT_MAP)
+    list(GET pair 0 _c)
+    list(GET pair 1 _pkg)
+    if(_c STREQUAL "${comp}")
+      find_package(${_pkg} CONFIG REQUIRED)
+      set(_found ON)
+      break()
+    endif()
+  endforeach()
+  if(NOT _found)
+    message(FATAL_ERROR "Unknown DaneJoe component: ${comp}")
+  endif()
+endforeach()

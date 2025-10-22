@@ -1,0 +1,51 @@
+build/
+*.log
+
+# keep tests tracked everywhere
+!**/tests/
+!**/tests/**
+
+# project/build system artifacts
+CMakeFiles/
+CMakeCache.txt
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+cmake-build-*/
+
+# local databases and generated data
+*.db
+
+# compiled objects and libraries
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.so*
+*.dylib
+*.dll
+*.pdb
+*.mod
+*.smod
+
+# coverage and profiling
+*.gcno
+*.gcda
+*.gcov
+*.profraw
+*.profdata
+
+# IDE/project files
+.idea/
+.vscode/
+*.user
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# document
+document/COMPONENT_GUIDE.md

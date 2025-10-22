@@ -1,0 +1,10 @@
+# 最简 Doxygen 配置模板（可按需调整）
+PROJECT_NAME           = "DaneJoeLibrary"
+OUTPUT_DIRECTORY       = docs
+GENERATE_LATEX         = NO
+RECURSIVE              = YES
+INPUT                  = library
+FILE_PATTERNS          = *.h *.hpp
+EXTRACT_ALL            = YES
+QUIET                  = YES
+GENERATE_TREEVIEW      = YES
