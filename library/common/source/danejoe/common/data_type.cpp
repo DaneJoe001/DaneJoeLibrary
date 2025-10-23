@@ -1,8 +1,6 @@
 #include "danejoe/common/data_type.hpp"
 
-namespace DaneJoe {
-
-uint32_t get_data_type_length(DataType type)
+uint32_t DaneJoe::get_data_type_length(DataType type)
 {
     switch (type)
     {
@@ -16,11 +14,11 @@ uint32_t get_data_type_length(DataType type)
         case DataType::Int64:  return 8;
         case DataType::Float:  return 4;
         case DataType::Double: return 8;
-        default: return 0; // 变长或未知类型返回0
+        default: return 0;
     }
 }
 
-std::string to_string(DataType type)
+std::string DaneJoe::to_string(DataType type)
 {
     switch (type)
     {
@@ -47,7 +45,7 @@ std::string to_string(DataType type)
     }
 }
 
-DataType to_data_type(uint8_t type_code)
+DaneJoe::DataType DaneJoe::to_data_type(uint8_t type_code)
 {
     // 若外部有自定义编码规则，可在此调整映射。
     // 默认按枚举顺序进行映射，越界则返回 Unknown。
@@ -74,5 +72,3 @@ DataType to_data_type(uint8_t type_code)
         default: return DataType::Unknown;
     }
 }
-
-} // namespace DaneJoe

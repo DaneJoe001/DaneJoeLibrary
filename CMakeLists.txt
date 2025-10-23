@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(DaneJoe VERSION 0.1.0 LANGUAGES CXX)
+project(DaneJoe VERSION 0.1.1 LANGUAGES CXX)
 
 # @brief 组件构建选项
 # @note 按需启用各组件；顶层聚合包会根据已构建组件导出对应目标

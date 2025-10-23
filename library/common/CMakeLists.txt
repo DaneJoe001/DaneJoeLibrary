@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(DaneJoeCommon VERSION 0.1.0 LANGUAGES CXX)
+project(DaneJoeCommon VERSION 0.1.1 LANGUAGES CXX)
 option(DANEJOE_COMMON_BUILD_TESTS "Build tests for DaneJoeCommon" ON)
 
 # @brief 定义实用工具库目标

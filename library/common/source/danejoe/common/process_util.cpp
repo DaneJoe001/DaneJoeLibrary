@@ -6,9 +6,8 @@
   #include <unistd.h>
 #endif
 
-namespace DaneJoe {
 
-int ProcessUtil::get_pid()
+int DaneJoe::ProcessUtil::get_pid()
 {
 #if defined(_WIN32)
     return static_cast<int>(::GetCurrentProcessId());
@@ -16,5 +15,3 @@ int ProcessUtil::get_pid()
     return static_cast<int>(::getpid());
 #endif
 }
-
-} // namespace DaneJoe

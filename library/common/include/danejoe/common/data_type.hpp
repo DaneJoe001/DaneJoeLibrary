@@ -1,5 +1,13 @@
 #pragma once
 
+/**
+ * @file data_type.hpp
+ * @brief 数据类型常用类型枚举工具
+ * @author DaneJoe001 
+ * @version 0.1.1
+ * @date 2025-10-24
+ */
+
 #include <map>
 #include <any>
 #include <cstdint>
@@ -7,8 +15,13 @@
 #include <vector>
 #include <type_traits>
 
+/**
+ * @namespace DaneJoe
+ * @brief DaneJoe 命名空间
+ */
 namespace DaneJoe
 {
+    /// @brief C字符串类型
     using CStrType= const char*;
     /**
      * @enum DataType
@@ -17,17 +30,27 @@ namespace DaneJoe
      */
     enum class DataType :uint8_t
     {
+        /// @brief 对象
         Object,
+        /// @brief 无符号8位整数
         UInt8,
+        /// @brief 有符号8位整数
         Int8,
+        /// @brief 无符号16位整数
         UInt16,
+        /// @brief 有符号16位整数
         Int16,
+        /// @brief 无符号32位整数
         UInt32,
+        /// @brief 有符号32位整数
         Int32,
+        /// @brief 无符号64位整数
         UInt64,
+        /// @brief 有符号64位整数
         Int64,
-        /// @brief 后续再确定浮点数规范
+        /// @brief 单精度浮点数
         Float,
+        /// @brief 双精度浮点数
         Double,
         /// @brief 使用一字节01表示
         Bool,
@@ -36,16 +59,22 @@ namespace DaneJoe
         String,
         /// @brief 字节流
         ByteArray,
+        /// @brief 映射
         Map,
+        /// @brief 数组
         Array,
+        /// @brief 字典
         Dictionary,
+        /// @brief 空值
         Null,
+        /// @brief 未知类型
         Unknown
     };
 
     /**
      * @brief 获取数据类型枚举
-     *@tparam 数据类型
+     * @tparam 数据类型
+     * @return DataType 数据类型枚举
      */
     template <class T>
     DataType get_data_type()
@@ -118,16 +147,21 @@ namespace DaneJoe
     /**
      * @brief 获取数据类型长度
      * @note 仅支持基础数据类型
+     * @param type 数据类型枚举
+     * @return uint32_t 数据类型长度
+     * @note 变长类型返回0
      */
     uint32_t get_data_type_length(DataType type);
     /**
      * @brief 获取数据类型字符串
      * @param type 数据类型枚举
+     * @return std::string 数据类型字符串
      */
     std::string to_string(DataType type);
     /**
      * @brief 获取数据类型枚举
      * @param type_code 数据类型标志位
+     * @return DataType 数据类型枚举
      */
     DataType to_data_type(uint8_t type_code);
 

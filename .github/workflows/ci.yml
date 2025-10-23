@@ -1,0 +1,60 @@
+name: ci
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [logger, common, database, concurrent, stringify]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build
+          sudo apt-get install -y libsqlite3-dev
+      - name: Configure (disable all then enable 1)
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DBUILD_TESTING=ON \
+            -DDANEJOE_BUILD_Logger=OFF \
+            -DDANEJOE_BUILD_Common=OFF \
+            -DDANEJOE_BUILD_Database=OFF \
+            -DDANEJOE_BUILD_Concurrent=OFF \
+            -DDANEJOE_BUILD_Stringify=OFF
+          cmake -D"DANEJOE_BUILD_${{ matrix.component^^ }}=ON" -S . -B build
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  install-and-config-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build libsqlite3-dev
+      - name: Configure+Install
+        run: |
+          cmake -S . -B build -G Ninja -DBUILD_TESTING=OFF
+          cmake --build build --target install
+      - name: FindPackage smoke test
+        run: |
+          mkdir -p /tmp/smoke
+          cat > /tmp/smoke/CMakeLists.txt <<'EOF'
+          cmake_minimum_required(VERSION 3.20)
+          project(Smoke LANGUAGES CXX)
+          find_package(DaneJoe CONFIG REQUIRED)
+          add_executable(smoke main.cpp)
+          target_link_libraries(smoke PRIVATE DaneJoe::Logger DaneJoe::Commons)
+          EOF
+          echo 'int main(){return 0;}' > /tmp/smoke/main.cpp
+          cmake -S /tmp/smoke -B /tmp/smoke/build -G Ninja
+          cmake --build /tmp/smoke/build
