@@ -59,7 +59,8 @@ def ensure_branch_deleted(branch: str, dry_run: bool) -> None:
         print(f"(info) delete branch {branch} returned {rc}, continuing...")
 
 
-def sync_component(component: str, remote: str, branch: str, prefix: str, dry_run: bool) -> int:
+def sync_component(component: str, remote: str, branch: str, prefix: str, dry_run: bool,
+                   tag: str | None = None, tag_message: str | None = None) -> int:
     """@brief 同步单个组件子树到指定远程分支。
     @param component 组件名（logger/common/database/concurrent/stringify）。
     @param remote 远程名（如 github-logger）。
@@ -78,7 +79,26 @@ def sync_component(component: str, remote: str, branch: str, prefix: str, dry_ru
     rc = run(["git", "push", "-f", remote, f"{split_branch}:{branch}"], dry_run=dry_run)
     if rc != 0:
         print(f"(error) push failed for {component}")
-    return rc
+        return rc
+
+    # tagging (optional)
+    if tag:
+        local_tag = f"{tag}-{component}"
+        print(f"==> Tag {component}: local {local_tag} -> remote {tag}")
+        if tag_message:
+            rc = run(["git", "tag", "-a", "-f", local_tag, "-m", f"{tag_message} ({component})", split_branch], dry_run=dry_run)
+        else:
+            rc = run(["git", "tag", "-f", local_tag, split_branch], dry_run=dry_run)
+        if rc != 0:
+            print(f"(error) tag create failed for {component}")
+            return rc
+        # push local component tag to remote as unified tag name
+        rc = run(["git", "push", "-f", remote, f"refs/tags/{local_tag}:refs/tags/{tag}"], dry_run=dry_run)
+        if rc != 0:
+            print(f"(error) push tag failed for {component}")
+            return rc
+
+    return 0
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:
@@ -93,6 +113,8 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     p.add_argument("--branch", default="master", help="target branch in subrepos (default: master)")
     p.add_argument("--prefix", default="library", help="monorepo path prefix (default: library)")
     p.add_argument("--dry-run", action="store_true", help="print commands without executing")
+    p.add_argument("--tag", help="create and push tag for each component (remote tag name), e.g. v0.1.1")
+    p.add_argument("--tag-message", default="", help="annotated tag message; if empty, create lightweight tag")
     # allow override remotes via repeated --remote comp=remote
     p.add_argument("--remote", action="append", default=[], help="override remote mapping, e.g. --remote logger=origin-logger")
     return p.parse_args(argv)
@@ -139,7 +161,8 @@ def main(argv: List[str]) -> int:
     status = 0
     for comp in components:
         remote = mapping[comp]
-        rc = sync_component(comp, remote, args.branch, args.prefix, args.dry_run)
+        rc = sync_component(comp, remote, args.branch, args.prefix, args.dry_run,
+                            tag=(args.tag or None), tag_message=(args.tag_message or None))
         status = status or rc
     if status == 0:
         print("All components synced.")
