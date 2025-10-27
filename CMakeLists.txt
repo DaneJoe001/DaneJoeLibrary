@@ -13,10 +13,7 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(BUILD_TESTING "Enable tests" OFF)
 
 # @brief 全局编译设置
-# @note 以目标特性声明 C++20；不启用编译器扩展，保证可移植性
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+# @note 依赖各目标自身的 target_compile_features 进行标准声明；关闭扩展建议由目标自行声明
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(BUILD_TESTING)

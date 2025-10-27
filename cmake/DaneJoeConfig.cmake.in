@@ -3,9 +3,12 @@
 # 将组件名映射到对应的独立包名
 # 例如: Logger -> DaneJoeLogger
 set(_DANEJOE_COMPONENT_MAP
-  "Logger;DaneJoeLogger"
+  "Common;DaneJoeCommon"
   "Commons;DaneJoeCommon"
+  "Logger;DaneJoeLogger"
   "Database;DaneJoeDatabase"
+  "Concurrent;DaneJoeConcurrent"
+  "Stringify;DaneJoeStringify"
 )
 
 foreach(comp IN LISTS DaneJoe_FIND_COMPONENTS)

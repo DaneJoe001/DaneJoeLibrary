@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 project(DaneJoeCommon VERSION 0.1.1 LANGUAGES CXX)
-option(DANEJOE_COMMON_BUILD_TESTS "Build tests for DaneJoeCommon" ON)
+option(DANEJOE_COMMON_BUILD_TESTS "Build tests for DaneJoeCommon" ${BUILD_TESTING})
 
 # @brief 定义实用工具库目标
 # @note 通过命名空间别名 `DaneJoe::Commons` 对外暴露
@@ -24,6 +24,9 @@ target_include_directories(DaneJoeCommon
 
 # @brief 以目标特性声明 C++20
 target_compile_features(DaneJoeCommon PUBLIC cxx_std_20)
+
+# 版本与 SOVERSION
+set_target_properties(DaneJoeCommon PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION 0)
 
 # @brief 安装目标与头文件
 include(GNUInstallDirs)
@@ -53,7 +56,7 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion
 )
 
-configure_file("cmake/DaneJoeUtilsConfig.cmake.in"
+configure_file("cmake/DaneJoeCommonConfig.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/DaneJoeCommonConfig.cmake" @ONLY)
 
 install(EXPORT DaneJoeCommonTargets
